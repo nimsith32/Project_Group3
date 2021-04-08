@@ -1,7 +1,7 @@
-﻿//Author: Nimsith & Gaelen
-//Project: NETD Project - TextEditor
-//Date: April 8th, 2021
-//Description: This application is the another budget version of notepad, basic file management services are available
+﻿//Author: Nimsith Fernandopulle
+//Project: NETD Lab 5 - TextEditor
+//Date: March 26th, 2021
+//Description: This application is the budget version of notepad, basic file management services are available
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Project_Group12
+namespace Lab5___Nimsith
 {
     public partial class formTextEditor : Form
     {
@@ -24,19 +24,14 @@ namespace Project_Group12
         {
             InitializeComponent();
         }
-        #region "Event Handlers"
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
 
+        #region "Event Handlers"
         /// <summary>
         /// THis is used to create a new blank text file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void FileNew(object sender, EventArgs e)
+        private void FileNew(object sender, EventArgs e)
         {
             textBoxEditor.Clear();
             filepath = string.Empty;
@@ -46,19 +41,9 @@ namespace Project_Group12
         /// <summary>
         /// Exits the application
         /// </summary>
-        public void FileExit(object sender, EventArgs e)
+        private void FileExit(object sender, EventArgs e)
         {
             Close();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void FileClose(object sender, EventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -66,7 +51,7 @@ namespace Project_Group12
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void FileOpen(object sender, EventArgs e)
+        private void FileOpen(object sender, EventArgs e)
         {
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -87,21 +72,12 @@ namespace Project_Group12
         /// <summary>
         /// Copying stuff to the clipboard
         /// </summary>
-        public void EditCopy(object sender, EventArgs e)
+        private void EditCopy(object sender, EventArgs e)
         {
-            if(this.MdiChildren.Length > 0)
-            {
-                if(this.ActiveMdiChild.GetType() == typeof(formTextEditor))
-                {
-                    formTextEditor textEditorInstance = (formTextEditor)this.ActiveMdiChild;
-                    textEditorInstance.EditCopy(sender, e);
-
-                }
-                else
-                {
-                    MessageBox.Show("The copy operation is not supposted by the current selected window.");
-                }
-            }
+           if(textBoxEditor.Text.Length != 0)
+           {
+               Clipboard.SetText(textBoxEditor.SelectedText);
+           }
         }
 
         /// <summary>
@@ -111,18 +87,9 @@ namespace Project_Group12
         /// <param name="e"></param>
         private void EditPaste(object sender, EventArgs e)
         {
-            if (this.ActiveMdiChild != null)
+            if(Clipboard.ContainsText())
             {
-                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
-                {
-                    formTextEditor textEditorInstance = (formTextEditor)this.ActiveMdiChild;
-                    textEditorInstance.EditPaste(sender, e);
-
-                }
-                else
-                {
-                    MessageBox.Show("The Paste operation is not supposted by the current selected window.");
-                }
+                textBoxEditor.SelectedText = Clipboard.GetText();
             }
 
         }
@@ -132,12 +99,25 @@ namespace Project_Group12
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void EditCut(object sender, EventArgs e)
+        private void EditCut(object sender, EventArgs e)
         {
             Clipboard.SetText(textBoxEditor.SelectedText);
-
+            
             textBoxEditor.SelectedText = string.Empty;
 
+        }
+
+        /// <summary>
+        /// by clicking you can select all the text in the editor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EditSelectAll(object sender, EventArgs e)
+        {
+            for(int i = 0; i < textBoxEditor.Text.Length; i++)
+            {
+                textBoxEditor.SelectAll();
+            }
         }
 
         /// <summary>
@@ -145,9 +125,9 @@ namespace Project_Group12
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void SaveClick(object sender, EventArgs e)
+        private void SaveClick(object sender, EventArgs e)
         {
-            if (filepath == string.Empty)
+            if(filepath == string.Empty)
             {
                 FileSaveAs(sender, e);
             }
@@ -160,59 +140,46 @@ namespace Project_Group12
         /// <summary>
         /// The program will ask the user to select a location to save the file
         /// </summary>
-        public void FileSaveAs(object sender, EventArgs e)
+        private void FileSaveAs(object sender, EventArgs e)
         {
-            if(this.MdiChildren.Length > 0)
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+
+            if(saveDialog.ShowDialog() == DialogResult.OK)
             {
-                if (this.ActiveMdiChild.GetType() == typeof(formTextEditor))
-                {
-                    formTextEditor textEditorInstance = (formTextEditor)this.ActiveMdiChild;
-                    textEditorInstance.FileSaveAs(sender, e);
+                filepath = saveDialog.FileName;
 
-                }
+                SaveTextFile(filepath);
 
+                UpdateTitle();
             }
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void windowNewTextEditor(object sender, EventArgs e)
-        {
-            formTextEditor textEditorInstance = new formTextEditor();
-            textEditorInstance.MdiParent = this;
-            textEditorInstance.Show();
-            textEditorInstance.Focus();
         }
-
 
         /// <summary>
         /// Displays a little message about this application in the help dropdown
         /// </summary>
-        public void HelpAbout(object sender, EventArgs e)
+        private void HelpAbout(object sender, EventArgs e)
         {
-            MessageBox.Show("Text Editor\n" + "By Gaelen & Nimsith\n\n" + "For NETD 2202 Final Project" +
-                "\n" + "April 2021", "About this Application");
+            MessageBox.Show("Text Editor\n" + "By Nimsith Fernandopulle\n\n" + "For NETD 2202" +
+                "\n" + "March 2021", "About this Application");
 
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void ConfirmClose(object sender, FormClosingEventArgs e)
+        private void ConfirmClose(object sender, FormClosingEventArgs e)
         {
 
-            if (MessageBox.Show("Do you want to save changes to your text?", "My Application",
-                 MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                e.Cancel = true;
-                FileSaveAs(sender, e);
-            }
+                if (MessageBox.Show("Do you want to save changes to your text?", "My Application",
+                     MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                    FileSaveAs(sender, e);
+                } 
 
         }
-
 
         #endregion
 
@@ -222,8 +189,8 @@ namespace Project_Group12
         /// </summary>
         public void UpdateTitle()
         {
-            this.Text = "Group 2's Whiteboard";
-            if (filepath != string.Empty)
+            this.Text = "Nimsith's Whiteboard";
+            if(filepath != string.Empty)
             {
                 this.Text += " - " + filepath;
             }
@@ -243,15 +210,5 @@ namespace Project_Group12
             writer.Close();
         }
         #endregion
-
-        private void WindowCascade(object sender, EventArgs e)
-        {
-            this.LayoutMdi(MdiLayout.Cascade);
-        }
-
-        //private void windowTileVertical(object sender, EventArgs e)
-        //{
-        //   this.LayoutMdi(MdiLayout.TileVertical);
-        // }
     }
 }

@@ -57,7 +57,6 @@ namespace Project_Group12
             this.windowNewTextEditor2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.textBoxEditor = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuTop.SuspendLayout();
             this.SuspendLayout();
@@ -262,7 +261,7 @@ namespace Project_Group12
             this.windowNewTextEditor1.Size = new System.Drawing.Size(231, 26);
             this.windowNewTextEditor1.Text = "1 Text Editor 1 - New";
             this.windowNewTextEditor1.ToolTipText = "Click to open a new text editor";
-            this.windowNewTextEditor1.Click += new System.EventHandler(this.windowNewWhiteboard);
+            this.windowNewTextEditor1.Click += new System.EventHandler(this.windowNewTextEditor);
             // 
             // windowNewTextEditor2
             // 
@@ -287,23 +286,12 @@ namespace Project_Group12
             this.menuHelpAbout.ToolTipText = "Click to learn more about the application";
             this.menuHelpAbout.Click += new System.EventHandler(this.HelpAbout);
             // 
-            // textBoxEditor
-            // 
-            this.textBoxEditor.AcceptsTab = true;
-            this.textBoxEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxEditor.Location = new System.Drawing.Point(0, 28);
-            this.textBoxEditor.Multiline = true;
-            this.textBoxEditor.Name = "textBoxEditor";
-            this.textBoxEditor.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxEditor.Size = new System.Drawing.Size(800, 422);
-            this.textBoxEditor.TabIndex = 1;
-            // 
             // formTextEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.textBoxEditor);
             this.Controls.Add(this.menuTop);
+            this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuTop;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -345,7 +333,6 @@ namespace Project_Group12
         private System.Windows.Forms.ToolStripMenuItem windowNewTextEditor2;
         private System.Windows.Forms.ToolStripMenuItem menuHelp;
         private System.Windows.Forms.ToolStripMenuItem menuHelpAbout;
-        private System.Windows.Forms.TextBox textBoxEditor;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripMenuItem windowCustomerList;
     }
